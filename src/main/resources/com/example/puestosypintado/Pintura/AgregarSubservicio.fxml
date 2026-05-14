@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<!--
+    PANTALLA 3 — AGREGAR / EDITAR SUBSERVICIOS DE LA ORDEN
+    Flujo: el empleado selecciona subservicios del catálogo con checkbox (ListView),
+    opcionalmente especifica las piezas afectadas separadas por coma, y confirma.
+    INSERT/DELETE → tbl.Detalle_Servicio_Pintura via sp_AgregarSubservicio
+    SELECT        → tbl.Subservicios WHERE estado = 'ACTIVO'
+    Costo         → fn_CalcularCostoTotalServicio (tiempo real)
+-->
+
+<AnchorPane prefHeight="690.0" prefWidth="920.0" style="-fx-background-color: #F0F5FB;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.puestosypintado.controladores.SubserviciosController">
+    <children>
+
+        <!-- HEADER -->
+        <Pane prefHeight="48.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="10.0" style="-fx-font-family: Impact; -fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="SERVICIO DE PINTURA" />
+                <Label layoutX="480.0" layoutY="17.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;" text="TALLER — SUBSERVICIOS DE LA ORDEN" />
+            </children>
+        </Pane>
+
+        <!-- HOME -->
+        <Button onAction="#irHome" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.50); -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="HOME" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </Button>
+
+        <!-- BARRA DE CONTEXTO -->
+        <Pane layoutY="48.0" prefHeight="52.0" prefWidth="920.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label layoutX="15.0" layoutY="8.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="ORDEN #" />
+                <TextField fx:id="txtIdOrden" disable="true" layoutX="75.0" layoutY="4.0" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold;" />
+
+                <Label layoutX="165.0" layoutY="8.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="CLIENTE" />
+                <TextField fx:id="txtClienteOrden" disable="true" layoutX="220.0" layoutY="4.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-border-width: 0 0 2 0;" />
+
+                <Label layoutX="415.0" layoutY="8.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="VEHICULO" />
+                <TextField fx:id="txtVehiculoOrden" disable="true" layoutX="476.0" layoutY="4.0" prefHeight="26.0" prefWidth="180.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-border-width: 0 0 2 0;" />
+
+                <Label layoutX="670.0" layoutY="8.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="COSTO TOTAL" />
+                <TextField fx:id="txtCostoTotal" disable="true" layoutX="755.0" layoutY="4.0" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-text-fill: #00AA77; -fx-font-family: Courier New; -fx-font-size: 13px; -fx-font-weight: bold; -fx-border-width: 0 0 2 0;" />
+            </children>
+        </Pane>
+
+        <!-- SPLIT PANE -->
+        <SplitPane dividerPositions="0.44" layoutY="100.0" prefHeight="584.0" prefWidth="920.0" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+            <items>
+
+                <!-- IZQUIERDA — CATALOGO CON SELECCION MULTIPLE -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #E8F1F8; -fx-border-color: #0066CC; -fx-border-width: 0 2 0 0;">
+                    <children>
+                        <Label layoutX="10.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="SUBSERVICIOS DISPONIBLES" />
+
+                        <!-- Descripcion del subservicio seleccionado -->
+                        <Label layoutX="10.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="DESCRIPCION" AnchorPane.bottomAnchor="178.0" AnchorPane.leftAnchor="10.0" />
+                        <TextField fx:id="txtDescSubservicio" disable="true" prefHeight="28.0" style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #B3D9FF transparent; -fx-border-width: 0 0 1 0; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #555555;" AnchorPane.bottomAnchor="144.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+
+                        <!-- Campo de PIEZAS afectadas -->
+                        <Label layoutX="10.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="PIEZAS AFECTADAS (separadas por coma)" AnchorPane.bottomAnchor="122.0" AnchorPane.leftAnchor="10.0" />
+                        <TextField fx:id="txtPiezas" prefHeight="28.0" promptText="ej: parachoques, espejo izq, puerta der" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-prompt-text-fill: #9999CC;" AnchorPane.bottomAnchor="88.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+
+                        <!-- Lista de piezas parseadas (visual) -->
+                        <ListView fx:id="lvPiezas" style="-fx-background-color: #FFFFFF; -fx-border-color: #D9E8F5; -fx-border-width: 1; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="468.0" />
+
+                        <!-- Botones de seleccion -->
+                        <HBox spacing="8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                            <children>
+                                <!-- Seleccionar todo -->
+                                <Button onAction="#fnSeleccionarTodo" prefHeight="28.0" prefWidth="130.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="SELECCIONAR TODO">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button onAction="#fnDeseleccionarTodo" prefHeight="28.0" prefWidth="130.0" style="-fx-background-color: #888888; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="DESELECCIONAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <!-- Agregar seleccionados -->
+                                <Button onAction="#fnAgregarSubservicio" prefHeight="28.0" style="-fx-background-color: #00AA77; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="AGREGAR" AnchorPane.rightAnchor="10.0">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+                  <ScrollPane layoutX="1.0" layoutY="28.0" prefHeight="354.0" prefWidth="380.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="323.0" prefWidth="312.0" />
+                    </content>
+                  </ScrollPane>
+
+                    </children>
+                </AnchorPane>
+
+                <!-- DERECHA — SUBSERVICIOS AÑADIDOS A ESTA ORDEN -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F8FCFF;">
+                    <children>
+
+                        <Label layoutX="10.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="SUBSERVICIOS DE ESTA ORDEN" />
+
+                        <TableView fx:id="tvOrdenSubservicios" layoutY="32.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent; -fx-selection-bar: #0066CC; -fx-selection-bar-non-focused: #66B2FF; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="130.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                            <columns>
+                                <TableColumn fx:id="colDetalleId" prefWidth="50.0" text="ID" />
+                                <TableColumn fx:id="colDetalleNombre" prefWidth="160.0" text="SUBSERVICIO" />
+                                <TableColumn fx:id="colDetallePrecio" prefWidth="100.0" text="PRECIO BASE" />
+                                <TableColumn fx:id="colDetalleEstado" prefWidth="110.0" text="ESTADO" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+
+                        <Line endX="490.0" endY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" AnchorPane.bottomAnchor="126.0" AnchorPane.leftAnchor="15.0" />
+
+                        <!-- Quitar subservicio -->
+                        <Button onAction="#fnQuitarSubservicio" prefHeight="28.0" prefWidth="110.0" style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;" text="QUITAR" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="15.0">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                        <!-- Resumen -->
+                        <Label style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="SUMA BASE:" AnchorPane.bottomAnchor="94.0" AnchorPane.rightAnchor="180.0" />
+                        <TextField fx:id="txtSumaPreciosBase" disable="true" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #B3D9FF transparent; -fx-border-width: 0 0 1 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold;" AnchorPane.bottomAnchor="88.0" AnchorPane.rightAnchor="15.0" />
+
+                        <Line endX="490.0" endY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="15.0" />
+
+                        <!-- Botones de navegacion -->
+                        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#fnVolverOrden" prefHeight="34.0" prefWidth="110.0" style="-fx-background-color: #888888; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;" text="VOLVER">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnIrDetalle" prefHeight="34.0" prefWidth="160.0" style="-fx-background-color: #00AA77; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #009966; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;" text="VER DETALLE">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+
+        <!-- BOTTOM STRIP -->
+        <Pane prefHeight="6.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+    </children>
+</AnchorPane>

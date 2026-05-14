@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="690.0" prefWidth="920.0" style="-fx-background-color: #F0F5FB;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.puestosypintado.controladores.ProductoController">
+    <children>
+
+        <!-- HEADER BAR -->
+        <Pane prefHeight="48.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="10.0" style="-fx-font-family: Impact; -fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="CONTROL DE INVENTARIO" />
+                <Label layoutX="480.0" layoutY="17.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;" text="FERRETERIA — REGISTRO DE PRODUCTOS" />
+            </children>
+        </Pane>
+
+        <!-- HOME -->
+        <Button onAction="#irHome" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.50); -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="HOME" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </Button>
+
+        <!-- MAIN SPLIT PANE -->
+        <SplitPane dividerPositions="0.36" layoutY="48.0" prefHeight="636.0" prefWidth="920.0" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0">
+            <items>
+
+                <!-- LEFT PANEL — TABLE -->
+                <!-- FIX: layoutX="0.0" eliminado en TableView para quitar la línea blanca lateral -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #E8F1F8; -fx-border-color: #0066CC; -fx-border-width: 0 2 0 0;">
+                    <children>
+                        <Label layoutX="10.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="LISTADO" />
+                        <!-- FIX: anclas a los 4 lados para evitar línea blanca extra -->
+                        <TableView fx:id="tvInventario" layoutY="32.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent; -fx-selection-bar: #0066CC; -fx-selection-bar-non-focused: #66B2FF; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                            <columns>
+                                <TableColumn fx:id="colSKU" prefWidth="55.0" text="ID" />
+                                <TableColumn fx:id="colDescripcion" prefWidth="170.0" text="NOMBRE" />
+                                <TableColumn fx:id="colStock" prefWidth="60.0" text="STOCK" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </children>
+                </AnchorPane>
+
+                <!-- RIGHT PANEL — FORM -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F8FCFF;">
+                    <children>
+
+                        <!-- ID PRODUCTO -->
+                        <Label layoutX="15.0" layoutY="18.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="ID PRODUCTO" />
+                        <TextField fx:id="txtSKU" disable="true" layoutX="130.0" layoutY="12.0" prefHeight="28.0" prefWidth="90.0" style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+                        <!-- FIX: "?" → "🔍" -->
+                        <Button fx:id="btnBuscarProd" layoutX="474.0" layoutY="12.0" onAction="#fnBuscarProducto" prefHeight="28.0" prefWidth="34.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-background-radius: 2;" text="🔍">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                        <Line endX="540.0" endY="0.0" layoutY="50.0" startX="15.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                        <!-- NOMBRE -->
+                        <Label layoutX="15.0" layoutY="71.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="NOMBRE " />
+                        <TextField fx:id="txtnombre" layoutX="130.0" layoutY="65.0" prefHeight="28.0" prefWidth="380.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- DESCRIPCION -->
+                        <Label layoutX="15.0" layoutY="109.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="DESCRIPCION" />
+                        <TextField fx:id="txtDescripcion" layoutX="130.0" layoutY="103.0" prefHeight="28.0" prefWidth="380.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- CATEGORIA | ESTADO PIEZA -->
+                        <Label layoutX="15.0" layoutY="147.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="CATEGORIA *" />
+                        <ComboBox fx:id="cmbCategoria" layoutX="130.0" layoutY="141.0" prefHeight="28.0" prefWidth="155.0" promptText="Seleccione..." style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <Label layoutX="300.0" layoutY="147.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="ESTADO" />
+                        <ComboBox fx:id="cmbEstadoPieza" layoutX="370.0" layoutY="141.0" prefHeight="28.0" prefWidth="140.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <!-- TIPO VEHICULO | COLOR -->
+                        <Label layoutX="15.0" layoutY="185.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="TIPO VEHICULO" />
+                        <ComboBox fx:id="cmbTipoVehiculo" layoutX="130.0" layoutY="179.0" prefHeight="28.0" prefWidth="155.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <Label layoutX="300.0" layoutY="185.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="COLOR" />
+                        <TextField fx:id="txtColor" layoutX="370.0" layoutY="179.0" prefHeight="28.0" prefWidth="140.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- PAIS ORIGEN | AÑO PIEZA -->
+                        <Label layoutX="15.0" layoutY="223.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="PAIS ORIGEN" />
+                        <TextField fx:id="txtPaisOrigen" layoutX="130.0" layoutY="217.0" prefHeight="28.0" prefWidth="155.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <Label layoutX="300.0" layoutY="223.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="AÑO PIEZA" />
+                        <TextField fx:id="txtAnioPieza" layoutX="400.0" layoutY="217.0" prefHeight="28.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- MARCA PIEZA | MODELO PIEZA -->
+                        <Label layoutX="15.0" layoutY="261.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="MARCA PIEZA" />
+                        <TextField fx:id="txtMarcaPieza" layoutX="130.0" layoutY="255.0" prefHeight="28.0" prefWidth="155.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <Label layoutX="300.0" layoutY="261.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="MODELO PIEZA" />
+                        <TextField fx:id="txtModeloPieza" layoutX="410.0" layoutY="255.0" prefHeight="28.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- STOCK ACTUAL | STOCK MINIMO -->
+                        <Label layoutX="15.0" layoutY="299.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="STOCK ACTUAL" />
+                        <TextField fx:id="txtStock" layoutX="130.0" layoutY="293.0" prefHeight="28.0" prefWidth="90.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <Label layoutX="235.0" layoutY="299.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="MINIMO" />
+                        <TextField fx:id="txtStockMinimo" layoutX="300.0" layoutY="293.0" prefHeight="28.0" prefWidth="90.0" promptText="Para alertas" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-prompt-text-fill: #9999CC;" />
+
+                        <!-- PRECIO COMPRA | PRECIO VENTA -->
+                        <Label layoutX="15.0" layoutY="337.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="PRECIO COMPRA" />
+                        <TextField fx:id="txtPrecioCom" layoutX="130.0" layoutY="331.0" prefHeight="28.0" prefWidth="120.0" promptText="0.00" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-prompt-text-fill: #9999CC;" />
+
+                        <Label layoutX="270.0" layoutY="337.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="PRECIO VENTA" />
+                        <TextField fx:id="txtPrecio" layoutX="380.0" layoutY="331.0" prefHeight="28.0" prefWidth="130.0" promptText="0.00" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-prompt-text-fill: #9999CC;" />
+
+                        <Line endX="540.0" endY="0.0" layoutY="406.0" startX="15.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                        <!-- VEHICULOS COMPATIBLES -->
+                        <Label layoutX="15.0" layoutY="414.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="VEHICULOS COMPATIBLES" />
+
+                        <TextField fx:id="txtCompatMarca" layoutX="15.0" layoutY="432.0" prefHeight="26.0" prefWidth="120.0" promptText="Marca" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-prompt-text-fill: #9999CC;" />
+                        <TextField fx:id="txtCompatModelo" layoutX="143.0" layoutY="432.0" prefHeight="26.0" prefWidth="120.0" promptText="Modelo" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-prompt-text-fill: #9999CC;" />
+                        <TextField fx:id="txtCompatAnio" layoutX="271.0" layoutY="432.0" prefHeight="26.0" prefWidth="70.0" promptText="Año" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-prompt-text-fill: #9999CC;" />
+                        <Button layoutX="349.0" layoutY="432.0" onAction="#fnAgregarCompatible" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;" text="AGREGAR">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+                        <Button layoutX="437.0" layoutY="432.0" onAction="#fnQuitarCompatible" prefHeight="26.0" prefWidth="70.0" style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;" text="QUITAR">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                        <TableView fx:id="tvCompatibles" layoutX="15.2" layoutY="465.0" prefHeight="115.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-selection-bar: #0066CC; -fx-selection-bar-non-focused: #66B2FF; -fx-faint-focus-color: transparent;" AnchorPane.leftAnchor="15.2" AnchorPane.rightAnchor="15.200000000000045">
+                            <columns>
+                                <TableColumn fx:id="colCompatMarca" prefWidth="160.0" text="MARCA" />
+                                <TableColumn fx:id="colCompatModelo" prefWidth="160.0" text="MODELO" />
+                                <TableColumn fx:id="colCompatAnio" prefWidth="80.0" text="AÑO" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+
+                        <Line endX="540.0" endY="0.0" layoutY="579.0" startX="15.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                        <!-- ACTION BUTTONS -->
+                        <HBox alignment="CENTER" layoutX="10.4" layoutY="595.0" prefHeight="42.0" prefWidth="555.0" spacing="10.0" AnchorPane.leftAnchor="10.4" AnchorPane.rightAnchor="10.399999999999977">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#fnGuardarProducto" prefHeight="34.0" prefWidth="90.0" style="-fx-background-color: #00AA77; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #009966; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;" text="GUARDAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnModificarProducto" prefHeight="34.0" prefWidth="90.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #0052A3; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;" text="EDITAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnBorrarProducto" prefHeight="34.0" prefWidth="90.0" style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #E63939; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;" text="BORRAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnLimpiar" prefHeight="34.0" prefWidth="90.0" style="-fx-background-color: #00AA99; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #008877; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;" text="LIMPIAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+                  <Label layoutX="237.0" layoutY="18.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="PROVEEDOR" />
+                  <ComboBox fx:id="cmbproveedor" layoutX="308.0" layoutY="12.0" prefHeight="28.0" prefWidth="155.0" style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+                  <Label layoutX="15.0" layoutY="376.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="FECHA EXPIRACION" />
+                  <TextField fx:id="txtPrecioCom1" layoutX="145.0" layoutY="370.0" prefHeight="28.0" prefWidth="120.0" promptText="0.00" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-prompt-text-fill: #9999CC;" />
+
+                    </children>
+                </AnchorPane>
+
+            </items>
+        </SplitPane>
+
+        <!-- BOTTOM STRIP -->
+        <Pane prefHeight="6.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+    </children>
+</AnchorPane>

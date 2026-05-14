@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<!--
+    PANTALLA 4 — DETALLE DEL SERVICIO DE PINTURA
+    READ → tbl.Servicio_Pintura, tbl.Cliente, tbl.Vehiculo
+    READ → tbl.Detalle_Servicio_Pintura + tbl.Subservicios
+    READ → tbl.Incidencias_Servicio (activas)
+    READ → tbl.Detalle_Pago_Cliente (saldo)
+    READ → fn_CalcularCostoTotalServicio, fn_SaldoPendienteServicio, fn_AnticipoPagado
+    Los botones de acción se habilitan/deshabilitan según el estado del servicio.
+-->
+
+<AnchorPane prefHeight="690.0" prefWidth="920.0" style="-fx-background-color: #F0F5FB;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.puestosypintado.controladores.DetalleServicioController">
+    <children>
+
+        <!-- HEADER -->
+        <Pane prefHeight="48.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="10.0" style="-fx-font-family: Impact; -fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="SERVICIO DE PINTURA" />
+                <Label layoutX="480.0" layoutY="17.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;" text="TALLER — DETALLE DE ORDEN" />
+            </children>
+        </Pane>
+
+        <!-- HOME -->
+        <Button onAction="#irHome" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.50); -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="HOME" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </Button>
+
+        <!-- BANDA DE ESTADO — color cambia por código según estado del servicio -->
+        <Pane fx:id="paneEstado" layoutY="48.0" prefHeight="36.0" prefWidth="920.0" style="-fx-background-color: #888888;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="9.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="ESTADO:" />
+                <!-- Se actualiza dinámicamente; color de fondo del pane cambia por estado -->
+                <Label fx:id="lblEstado" layoutX="72.0" layoutY="9.0" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="cotizado" />
+                <Label layoutX="280.0" layoutY="9.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.80);" text="ORDEN #" />
+                <Label fx:id="lblIdOrden" layoutX="334.0" layoutY="9.0" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="—" />
+                <Label layoutX="550.0" layoutY="9.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.80);" text="DÍAS EN TALLER:" />
+                <Label fx:id="lblDiasTaller" layoutX="660.0" layoutY="9.0" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="—" />
+            </children>
+        </Pane>
+
+        <!-- SPLIT PANE -->
+        <SplitPane dividerPositions="0.42" layoutY="84.0" prefHeight="600.0" prefWidth="920.0" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="84.0">
+            <items>
+
+                <!-- IZQUIERDA — DATOS DEL SERVICIO -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #E8F1F8; -fx-border-color: #0066CC; -fx-border-width: 0 2 0 0;">
+                    <children>
+
+                        <Label layoutX="10.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="DATOS DEL SERVICIO" />
+                        <Line endX="355.0" endY="0.0" layoutX="10.0" layoutY="26.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.4;" />
+
+                        <!-- tbl.Cliente -->
+                        <Label layoutX="10.0" layoutY="34.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="CLIENTE" />
+                        <TextField fx:id="txtCliente" disable="true" layoutX="90.0" layoutY="30.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Label layoutX="10.0" layoutY="66.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="TELÉFONO" />
+                        <TextField fx:id="txtTelefono" disable="true" layoutX="90.0" layoutY="62.0" prefHeight="26.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <!-- tbl.Vehiculo -->
+                        <Label layoutX="10.0" layoutY="98.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="VEHÍCULO" />
+                        <TextField fx:id="txtVehiculo" disable="true" layoutX="90.0" layoutY="94.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Label layoutX="10.0" layoutY="130.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="PLACA" />
+                        <TextField fx:id="txtPlaca" disable="true" layoutX="90.0" layoutY="126.0" prefHeight="26.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Line endX="355.0" endY="0.0" layoutX="10.0" layoutY="162.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.4;" />
+
+                        <!-- tbl.Servicio_Pintura — fechas -->
+                        <Label layoutX="10.0" layoutY="170.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="ENTRADA" />
+                        <TextField fx:id="txtFechaEntrada" disable="true" layoutX="90.0" layoutY="166.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Label layoutX="10.0" layoutY="202.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="PROMETIDA" />
+                        <TextField fx:id="txtFechaPrometida" disable="true" layoutX="90.0" layoutY="198.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Label layoutX="10.0" layoutY="234.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="LÍM. ANTICIPO" />
+                        <TextField fx:id="txtFechaLimite" disable="true" layoutX="110.0" layoutY="230.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Line endX="355.0" endY="0.0" layoutX="10.0" layoutY="266.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.4;" />
+
+                        <!-- fn_CalcularCostoTotalServicio, fn_SaldoPendienteServicio, fn_AnticipoPagado -->
+                        <Label layoutX="10.0" layoutY="276.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="RESUMEN DE COBRO" />
+
+                        <Label layoutX="10.0" layoutY="300.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #555555;" text="COSTO TOTAL" />
+                        <TextField fx:id="txtCostoTotal" disable="true" layoutX="130.0" layoutY="296.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold;" />
+
+                        <Label layoutX="10.0" layoutY="332.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #555555;" text="ANTICIPO REQ." />
+                        <TextField fx:id="txtAnticipoRequerido" disable="true" layoutX="130.0" layoutY="328.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                        <Label layoutX="10.0" layoutY="364.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #555555;" text="PAGADO" />
+                        <TextField fx:id="txtPagado" disable="true" layoutX="130.0" layoutY="360.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #00AA77; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold;" />
+
+                        <Label layoutX="10.0" layoutY="396.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #555555;" text="SALDO PENDIENTE" />
+                        <!-- fn_SaldoPendienteServicio -->
+                        <TextField fx:id="txtSaldoPendiente" disable="true" layoutX="130.0" layoutY="392.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #FF6B6B transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #CC0000; -fx-font-family: Courier New; -fx-font-size: 13px; -fx-font-weight: bold;" />
+
+                        <!-- fn_AnticipoPagado — indicador visual -->
+                        <Label layoutX="10.0" layoutY="428.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #555555;" text="ANTICIPO" />
+
+                        <Line endX="355.0" endY="0.0" layoutX="10.0" layoutY="460.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.4;" />
+
+                        <!-- DESCRIPCION del trabajo -->
+                        <Label layoutX="10.0" layoutY="468.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="DESCRIPCION" />
+                        <TextField fx:id="txtDescripcion" disable="true" layoutX="10.0" layoutY="484.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 10px;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="103.0" />
+                  <TextField fx:id="lblAnticipoPagado" disable="true" layoutX="131.0" layoutY="423.0" prefHeight="26.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #00AA77; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold;" />
+
+                    </children>
+                </AnchorPane>
+
+                <!-- DERECHA — SUBSERVICIOS + INCIDENCIAS + ACCIONES -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F8FCFF;">
+                    <children>
+
+                        <!-- SUBSERVICIOS -->
+                        <Label layoutX="10.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="SUBSERVICIOS" />
+
+                        <!-- tbl.Detalle_Servicio_Pintura JOIN tbl.Subservicios -->
+                        <TableView fx:id="tvSubservicios" layoutY="30.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-selection-bar: #0066CC; -fx-selection-bar-non-focused: #66B2FF; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="368.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                            <columns>
+                                <TableColumn fx:id="colSubNombre" prefWidth="160.0" text="SUBSERVICIO" />
+                                <TableColumn fx:id="colSubEstado" prefWidth="110.0" text="ESTADO" />
+                                <TableColumn fx:id="colSubTecnico" prefWidth="130.0" text="TÉCNICO" />
+                                <TableColumn fx:id="colSubFecFin" prefWidth="100.0" text="FECHA FIN" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+
+                        <!-- sp_ActualizarSubservicio — solo visible si estado es en_proceso -->
+                        <Button fx:id="btnActualizarSubservicio" onAction="#fnActualizarSubservicio" prefHeight="28.0" prefWidth="220.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="ACTUALIZAR SUBSERVICIO" AnchorPane.bottomAnchor="334.0" AnchorPane.rightAnchor="15.0">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                        <Line endX="490.0" endY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" AnchorPane.bottomAnchor="320.0" AnchorPane.leftAnchor="10.0" />
+
+                        <!-- INCIDENCIAS ACTIVAS -->
+                        <Label layoutX="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #CC3300;" text="INCIDENCIAS ABIERTAS" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="10.0" />
+
+                        <!-- tbl.Incidencias_Servicio WHERE estado IN ('abierta','en_correccion') -->
+                        <TableView fx:id="tvIncidencias" style="-fx-background-color: #FFFFFF; -fx-border-color: #FFB3A0; -fx-border-width: 1; -fx-selection-bar: #CC3300; -fx-selection-bar-non-focused: #FF9980; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="174.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="322.0">
+                            <columns>
+                                <TableColumn fx:id="colIncTipo" prefWidth="160.0" text="TIPO DEFECTO" />
+                                <TableColumn fx:id="colIncSubservicio" prefWidth="130.0" text="SUBSERVICIO" />
+                                <TableColumn fx:id="colIncEstado" prefWidth="100.0" text="ESTADO" />
+                                <TableColumn fx:id="colIncFecha" prefWidth="100.0" text="DETECTADA" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+
+                        <Line endX="490.0" endY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" AnchorPane.bottomAnchor="170.0" AnchorPane.leftAnchor="10.0" />
+
+                        <!-- ACCIONES — se habilitan/deshabilitan por estado -->
+                        <Label layoutX="10.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="ACCIONES DISPONIBLES" AnchorPane.bottomAnchor="148.0" AnchorPane.leftAnchor="10.0" />
+
+                        <HBox spacing="8.0" AnchorPane.bottomAnchor="104.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                            <children>
+                                <!-- recibido → en_proceso -->
+                                <Button fx:id="btnIniciarServicio" onAction="#fnIniciarServicio" prefHeight="32.0" prefWidth="120.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="INICIAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <!-- en_proceso → sp_FinalizarServicio -->
+                                <Button fx:id="btnFinalizar" onAction="#fnFinalizarServicio" prefHeight="32.0" prefWidth="120.0" style="-fx-background-color: #00AA77; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="FINALIZAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <!-- terminado → sp_RegistrarIncidencia (abre pantalla 6) -->
+                                <Button fx:id="btnRegistrarIncidencia" onAction="#fnAbrirRegistrarIncidencia" prefHeight="32.0" prefWidth="130.0" style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="INCIDENCIA">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <!-- en_correccion → sp_ResolverIncidencia (abre pantalla 7) -->
+                                <Button fx:id="btnResolverIncidencia" onAction="#fnAbrirResolverIncidencia" prefHeight="32.0" prefWidth="120.0" style="-fx-background-color: #CC6600; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="RESOLVER">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="8.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                            <children>
+                                <!-- terminado + saldo 0 → sp_EntregarVehiculo (abre pantalla 8) -->
+                                <Button fx:id="btnEntregar" onAction="#fnAbrirEntrega" prefHeight="32.0" prefWidth="160.0" style="-fx-background-color: #00AA77; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #009966; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;" text="ENTREGAR VEHÍCULO">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+
+                        <!-- VOLVER -->
+                        <Button onAction="#fnVolver" prefHeight="28.0" prefWidth="80.0" style="-fx-background-color: #888888; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="VOLVER" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="10.0">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+
+        <!-- BOTTOM STRIP -->
+        <Pane prefHeight="6.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+
+    </children>
+</AnchorPane>

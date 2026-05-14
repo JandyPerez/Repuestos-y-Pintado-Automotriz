@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+
+<!--
+    PANTALLA 6 — REGISTRAR INCIDENCIA DE CALIDAD
+    INSERT → tbl.Incidencias_Servicio via sp_RegistrarIncidencia
+    READ   → tbl.Servicio_Pintura (contexto del servicio, solo lectura)
+    READ   → tbl.Detalle_Servicio_Pintura + tbl.Subservicios (selector del subservicio afectado)
+    READ   → tbl.Empleado (fk_supervisor = sesión activa)
+    Efecto → estado del servicio pasa a 'en_correccion' automáticamente
+-->
+<AnchorPane prefHeight="520.0" prefWidth="680.0" style="-fx-background-color: #F0F5FB;"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.puestosypintado.controladores.RegistrarIncidenciaController">
+    <children>
+
+        <!-- HEADER -->
+        <Pane prefHeight="48.0" prefWidth="680.0"
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #CC3300, #FF6B6B);"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="10.0"
+                       style="-fx-font-family: Impact; -fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;"
+                       text="REGISTRAR INCIDENCIA" />
+                <Label layoutX="380.0" layoutY="17.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;"
+                       text="TALLER — REVISIÓN DE CALIDAD" />
+            </children>
+        </Pane>
+
+        <!-- CONTEXTO DEL SERVICIO (solo lectura) -->
+        <Pane layoutY="48.0" prefHeight="44.0" prefWidth="680.0"
+              style="-fx-background-color: #E8F1F8; -fx-border-color: #CC3300; -fx-border-width: 0 0 2 0;"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <Label layoutX="15.0" layoutY="8.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;"
+                       text="ORDEN #" />
+                <TextField fx:id="txtIdServicio" disable="true" layoutX="72.0" layoutY="4.0"
+                           prefHeight="26.0" prefWidth="60.0"
+                           style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold;" />
+
+                <Label layoutX="148.0" layoutY="8.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;"
+                       text="CLIENTE" />
+                <TextField fx:id="txtClienteCtx" disable="true" layoutX="200.0" layoutY="4.0"
+                           prefHeight="26.0" prefWidth="180.0"
+                           style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <Label layoutX="392.0" layoutY="8.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;"
+                       text="PLACA" />
+                <TextField fx:id="txtPlacaCtx" disable="true" layoutX="435.0" layoutY="4.0"
+                           prefHeight="26.0" prefWidth="110.0"
+                           style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+            </children>
+        </Pane>
+
+        <!-- FORMULARIO -->
+        <AnchorPane layoutY="92.0" prefWidth="680.0"
+                    AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="92.0"
+                    style="-fx-background-color: #F8FCFF;">
+            <children>
+
+                <!-- TIPO DE DEFECTO — CHECK constraint: 7 valores -->
+                <Label layoutX="20.0" layoutY="22.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                       text="TIPO DE DEFECTO *" />
+                <!--
+                    Valores del CHECK:
+                    color_incorrecto | dano_carroceria | masillado_defectuoso |
+                    pintura_defectuosa | superficie_no_debida | barniz_defectuoso | otro
+                -->
+                <ComboBox fx:id="cmbTipoDefecto" layoutX="200.0" layoutY="16.0"
+                          prefHeight="28.0" prefWidth="300.0" promptText="Seleccione el tipo..."
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #FF9980; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <Line endX="640.0" endY="0.0" layoutX="20.0" layoutY="55.0"
+                      style="-fx-stroke: #CC3300; -fx-opacity: 0.3;" />
+
+                <!-- SUBSERVICIO AFECTADO (opcional) -->
+                <!-- tbl.Detalle_Servicio_Pintura JOIN tbl.Subservicios del servicio actual -->
+                <Label layoutX="20.0" layoutY="68.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                       text="SUBSERVICIO AFECTADO" />
+                <ComboBox fx:id="cmbSubservicioAfectado" layoutX="200.0" layoutY="62.0"
+                          prefHeight="28.0" prefWidth="300.0" promptText="Opcional..."
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+                <Label layoutX="506.0" layoutY="68.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #888888;"
+                       text="(fk_detalleServicio)" />
+
+                <Line endX="640.0" endY="0.0" layoutX="20.0" layoutY="102.0"
+                      style="-fx-stroke: #CC3300; -fx-opacity: 0.3;" />
+
+                <!-- DESCRIPCION DEL DEFECTO -->
+                <Label layoutX="20.0" layoutY="114.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                       text="DESCRIPCIÓN *" />
+                <!-- descripcion VARCHAR(500) -->
+                <TextArea fx:id="txtDescripcion" layoutX="20.0" layoutY="132.0"
+                          prefHeight="120.0" prefWidth="640.0" wrapText="true"
+                          promptText="Describe el defecto observado con detalle..."
+                          style="-fx-background-color: #FFFFFF; -fx-border-color: #FF9980; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <Line endX="640.0" endY="0.0" layoutX="20.0" layoutY="262.0"
+                      style="-fx-stroke: #CC3300; -fx-opacity: 0.3;" />
+
+                <!-- SUPERVISOR — fk_supervisor (sesión activa, solo lectura) -->
+                <Label layoutX="20.0" layoutY="274.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                       text="SUPERVISOR" />
+                <TextField fx:id="txtSupervisor" disable="true" layoutX="200.0" layoutY="268.0"
+                           prefHeight="28.0" prefWidth="300.0"
+                           style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+                <!-- ID oculto del supervisor (fk_supervisor) -->
+                <TextField fx:id="txtIdSupervisor" disable="true" layoutX="506.0" layoutY="268.0"
+                           prefHeight="28.0" prefWidth="60.0"
+                           style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <!-- AVISO -->
+                <Pane layoutX="20.0" layoutY="310.0" prefHeight="44.0" prefWidth="640.0"
+                      style="-fx-background-color: #FFF0ED; -fx-border-color: #FF6B6B; -fx-border-width: 1; -fx-border-radius: 2; -fx-background-radius: 2;">
+                    <children>
+                        <Label layoutX="12.0" layoutY="6.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #CC3300; -fx-font-weight: bold;"
+                               text="⚠  Al guardar, el estado del servicio cambiará a EN CORRECCIÓN." />
+                        <Label layoutX="12.0" layoutY="22.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #CC3300;"
+                               text="El vehículo no podrá entregarse hasta que la incidencia quede RESUELTA." />
+                    </children>
+                </Pane>
+
+                <Line endX="640.0" endY="0.0" layoutX="20.0" layoutY="366.0"
+                      style="-fx-stroke: #CC3300; -fx-opacity: 0.3;" />
+
+                <!-- BOTONES -->
+                <HBox alignment="CENTER" layoutX="20.0" layoutY="378.0"
+                      prefHeight="42.0" prefWidth="640.0" spacing="14.0">
+                    <children>
+                        <!-- sp_RegistrarIncidencia -->
+                        <Button mnemonicParsing="false" onAction="#fnGuardarIncidencia"
+                                prefHeight="34.0" prefWidth="160.0"
+                                style="-fx-background-color: #CC3300; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #AA2200; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;"
+                                text="REGISTRAR">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#fnCancelar"
+                                prefHeight="34.0" prefWidth="110.0"
+                                style="-fx-background-color: #888888; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;"
+                                text="CANCELAR">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+                    </children>
+                </HBox>
+
+            </children>
+        </AnchorPane>
+
+        <!-- BOTTOM STRIP -->
+        <Pane prefHeight="6.0" prefWidth="680.0"
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #CC3300, #FF6B6B);"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+
+    </children>
+</AnchorPane>

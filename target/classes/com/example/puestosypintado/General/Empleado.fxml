@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane prefHeight="690.0" prefWidth="920.0" style="-fx-background-color: #F0F5FB;"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.puestosypintado.controladores.EmpleadoController">
+    <children>
+
+        <!-- HEADER -->
+        <Pane prefHeight="48.0" prefWidth="920.0"
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="10.0"
+                       style="-fx-font-family: Impact; -fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;"
+                       text="GESTION DE EMPLEADOS" />
+                <Label layoutX="490.0" layoutY="17.0"
+                       style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;"
+                       text="FERRETERIA — REGISTRO DE EMPLEADOS" />
+            </children>
+        </Pane>
+
+        <!-- HOME -->
+        <Button onAction="#irHome" text="HOME" prefHeight="26.0" prefWidth="80.0"
+                style="-fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.50); -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;"
+                AnchorPane.topAnchor="11.0" AnchorPane.rightAnchor="12.0">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </Button>
+
+        <!-- MAIN SPLIT PANE -->
+        <SplitPane dividerPositions="0.40" layoutY="48.0" prefHeight="636.0" prefWidth="920.0"
+                   style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;"
+                   AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="48.0">
+            <items>
+
+                <!-- LEFT PANEL — TABLE -->
+                <AnchorPane minHeight="0.0" minWidth="0.0"
+                            style="-fx-background-color: #E8F1F8; -fx-border-color: #0066CC; -fx-border-width: 0 2 0 0;">
+                    <children>
+                        <Label layoutX="10.0" layoutY="10.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;"
+                               text="LISTADO" />
+                        <TableView fx:id="tvEmpleados" layoutY="32.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-selection-bar: #0066CC; -fx-selection-bar-non-focused: #66B2FF; -fx-faint-focus-color: transparent;"
+                                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                            <columns>
+                                <TableColumn fx:id="colNombreEmp" prefWidth="180.0" text="NOMBRE" />
+                                <TableColumn fx:id="colPuestoEmp" prefWidth="140.0" text="PUESTO" />
+                                <TableColumn fx:id="colTelEmp"    prefWidth="100.0" text="TELEFONO" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </children>
+                </AnchorPane>
+
+                <!-- RIGHT PANEL — FORM -->
+                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F8FCFF;">
+                    <children>
+
+                        <!-- ID EMPLEADO -->
+                        <Label layoutX="20.0" layoutY="18.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;"
+                               text="ID EMPLEADO" />
+                        <TextField fx:id="txtIdEmp" layoutX="115.0" layoutY="12.0"
+                                   prefHeight="28.0" prefWidth="80.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-prompt-text-fill: #9999CC;" />
+                        <Button layoutX="203.0" layoutY="12.0" onAction="#fnBuscarEmpleado"
+                                prefHeight="28.0" prefWidth="34.0"
+                                style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-background-radius: 2;"
+                                text="🔍">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                        <Line endX="430.0" endY="0.0" layoutY="50.0" startX="20.0" startY="0.0"
+                              style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                        <!-- NOMBRE -->
+                        <Label layoutX="20.0" layoutY="63.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="NOMBRE *" />
+                        <TextField fx:id="txtNombreEmp" layoutX="115.0" layoutY="59.0"
+                                   prefHeight="28.0" prefWidth="310.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- CEDULA -->
+                        <Label layoutX="20.0" layoutY="101.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="CEDULA / RNC *" />
+                        <TextField fx:id="txtCedulaEmp" layoutX="115.0" layoutY="97.0"
+                                   prefHeight="28.0" prefWidth="160.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- DIRECCION -->
+                        <Label layoutX="20.0" layoutY="139.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="DIRECCION" />
+                        <TextField fx:id="txtDireccionEmp" layoutX="115.0" layoutY="135.0"
+                                   prefHeight="28.0" prefWidth="310.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- CIUDAD + SECTOR -->
+                        <Label layoutX="20.0" layoutY="177.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="CIUDAD" />
+                        <ComboBox fx:id="cmbCiudad" layoutX="115.0" layoutY="173.0"
+                                  prefHeight="28.0" prefWidth="110.0"
+                                  style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <Label layoutX="240.0" layoutY="177.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="SECTOR" />
+                        <ComboBox fx:id="cmbSector" layoutX="295.0" layoutY="173.0"
+                                  prefHeight="28.0" prefWidth="130.0"
+                                  style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <!-- TELEFONO + SALARIO -->
+                        <Label layoutX="20.0" layoutY="215.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="TELEFONO *" />
+                        <TextField fx:id="txtTelEmp" layoutX="115.0" layoutY="211.0"
+                                   prefHeight="28.0" prefWidth="130.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <Label layoutX="260.0" layoutY="215.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="SALARIO" />
+                        <TextField fx:id="txtSalarioEmp" layoutX="320.0" layoutY="211.0"
+                                   prefHeight="28.0" prefWidth="105.0"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+
+                        <!-- CORREO -->
+                        <Label layoutX="20.0" layoutY="253.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="CORREO" />
+                        <TextField fx:id="txtEmailEmp" layoutX="115.0" layoutY="249.0"
+                                   prefHeight="28.0" prefWidth="310.0" promptText="correo@ejemplo.com"
+                                   style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-prompt-text-fill: #9999CC;" />
+
+                        <!-- PUESTO -->
+                        <Label layoutX="20.0" layoutY="291.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="PUESTO" />
+                        <ComboBox fx:id="cmbPuestoEmp" layoutX="115.0" layoutY="287.0"
+                                  prefHeight="28.0" prefWidth="310.0"
+                                  style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <!-- FECHA CONTRATO + ESTADO -->
+                        <Label layoutX="20.0" layoutY="329.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="F. CONTRATO" />
+                        <DatePicker fx:id="dpFechaContratEmp" layoutX="115.0" layoutY="325.0"
+                                    prefHeight="28.0" prefWidth="130.0"
+                                    style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+
+                        <Label layoutX="260.0" layoutY="329.0"
+                               style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;"
+                               text="ESTADO" />
+                        <ComboBox fx:id="cmbEstadoEmp" layoutX="320.0" layoutY="325.0"
+                                  prefHeight="28.0" prefWidth="105.0"
+                                  style="-fx-background-color: #FFFFFF; -fx-border-color: #0066CC; -fx-border-width: 1;" />
+
+                        <Line endX="430.0" endY="0.0" layoutY="370.0" startX="20.0" startY="0.0"
+                              style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                        <!-- ACTION BUTTONS — sin emojis -->
+                        <HBox alignment="CENTER" layoutX="10.0" layoutY="380.0"
+                              prefHeight="42.0" prefWidth="460.0" spacing="10.0"
+                              AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#fnGuardarEmpleado"
+                                        prefHeight="34.0" prefWidth="90.0"
+                                        style="-fx-background-color: #00AA77; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #009966; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;"
+                                        text="GUARDAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnModificarEmpleado"
+                                        prefHeight="34.0" prefWidth="90.0"
+                                        style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #0052A3; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;"
+                                        text="EDITAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnBorrarEmpleado"
+                                        prefHeight="34.0" prefWidth="90.0"
+                                        style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #E63939; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;"
+                                        text="BORRAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#fnLimpiarEmp"
+                                        prefHeight="34.0" prefWidth="90.0"
+                                        style="-fx-background-color: #00AA99; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #008877; -fx-border-width: 1; -fx-background-radius: 2; -fx-border-radius: 2;"
+                                        text="LIMPIAR">
+                                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                            </children>
+                        </HBox>
+
+                    </children>
+                </AnchorPane>
+
+            </items>
+        </SplitPane>
+
+        <!-- BOTTOM STRIP -->
+        <Pane prefHeight="6.0" prefWidth="920.0"
+              style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+
+    </children>
+</AnchorPane>

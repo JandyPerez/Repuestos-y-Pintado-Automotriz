@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<!--
+    PANTALLA 10 — INCIDENCIAS ABIERTAS (Panel de supervisión)
+    READ  → vw_IncidenciasAbiertas
+            (tbl.Incidencias_Servicio WHERE estado IN ('abierta','en_correccion')
+             JOIN tbl.Servicio_Pintura, tbl.Cliente, tbl.Vehiculo,
+             tbl.Detalle_Servicio_Pintura, tbl.Subservicios, tbl.Empleado)
+    Desde aquí se puede:
+      · Abrir pantalla 7 (Resolver Incidencia) para una incidencia seleccionada
+      · Abrir pantalla 4 (Detalle Servicio) del servicio asociado
+-->
+
+<AnchorPane prefHeight="690.0" prefWidth="920.0" style="-fx-background-color: #F0F5FB;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.puestosypintado.controladores.IncidenciasAbiertasController">
+    <children>
+
+        <!-- HEADER -->
+        <Pane prefHeight="48.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label layoutX="20.0" layoutY="10.0" style="-fx-font-family: Impact; -fx-font-size: 20px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="SERVICIO DE PINTURA" />
+                <Label layoutX="480.0" layoutY="17.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.85); -fx-font-weight: bold;" text="SUPERVISIÓN — INCIDENCIAS ABIERTAS" />
+            </children>
+        </Pane>
+
+        <!-- HOME -->
+        <Button onAction="#irHome" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.50); -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="HOME" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </Button>
+
+        <!-- BARRA DE FILTROS -->
+        <Pane layoutY="48.0" prefHeight="52.0" prefWidth="920.0" style="-fx-background-color: #E8F1F8; -fx-border-color: #0066CC; -fx-border-width: 0 0 2 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+                <!-- Filtro por tipo de defecto -->
+                <Label layoutX="15.0" layoutY="16.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="TIPO" />
+                <!--
+                    Valores del CHECK:
+                    Todos | color_incorrecto | dano_carroceria | masillado_defectuoso |
+                    pintura_defectuosa | superficie_no_debida | barniz_defectuoso | otro
+                -->
+                <ComboBox fx:id="cmbFiltroTipo" layoutX="48.0" layoutY="12.0" prefHeight="28.0" prefWidth="200.0" promptText="Todos los tipos" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <!-- Filtro por estado -->
+                <Label layoutX="265.0" layoutY="16.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="ESTADO" />
+                <ComboBox fx:id="cmbFiltroEstado" layoutX="316.0" layoutY="12.0" prefHeight="28.0" prefWidth="160.0" promptText="Todos" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <!-- Búsqueda libre por cliente o placa -->
+                <Label layoutX="494.0" layoutY="16.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="BUSCAR" />
+                <TextField fx:id="txtBuscar" layoutX="546.0" layoutY="12.0" prefHeight="28.0" prefWidth="200.0" promptText="Cliente o placa..." style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <!-- Botón refrescar — recarga vw_IncidenciasAbiertas -->
+                <Button layoutX="758.0" layoutY="12.0" onAction="#fnRefrescar" prefHeight="28.0" prefWidth="100.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-background-radius: 2;" text="REFRESCAR">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
+            </children>
+        </Pane>
+
+        <!-- SPLIT PANE MANUAL — tabla arriba, detalle abajo -->
+        <!-- TABLA PRINCIPAL — vw_IncidenciasAbiertas -->
+        <TableView fx:id="tvIncidencias" layoutY="100.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 0 0 2 0; -fx-selection-bar: #CC3300; -fx-selection-bar-non-focused: #FF9980; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="264.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+            <columns>
+                <!-- id_incidencia -->
+                <TableColumn fx:id="colId" prefWidth="55.0" text="ID" />
+                <!-- id_servicioPintura -->
+                <TableColumn fx:id="colOrden" prefWidth="60.0" text="ORDEN" />
+                <!-- cliente (vw_IncidenciasAbiertas.cliente) -->
+                <TableColumn fx:id="colCliente" prefWidth="160.0" text="CLIENTE" />
+                <!-- placa -->
+                <TableColumn fx:id="colPlaca" prefWidth="80.0" text="PLACA" />
+                <!-- subservicio_afectado -->
+                <TableColumn fx:id="colSubservicio" prefWidth="150.0" text="SUBSERVICIO" />
+                <!-- tipo_defecto -->
+                <TableColumn fx:id="colTipoDefecto" prefWidth="160.0" text="TIPO DEFECTO" />
+                <!-- estado (abierta / en_correccion) -->
+                <TableColumn fx:id="colEstado" prefWidth="110.0" text="ESTADO" />
+                <!-- fecha_deteccion -->
+                <TableColumn fx:id="colFecha" prefWidth="110.0" text="DETECTADA" />
+                <!-- supervisor -->
+                <TableColumn fx:id="colSupervisor" prefWidth="130.0" text="SUPERVISOR" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+
+        <!-- PANEL DE DETALLE — se carga al seleccionar una fila -->
+        <Pane layoutY="428.0" prefWidth="920.0" style="-fx-background-color: #F8FCFF; -fx-border-color: #0066CC; -fx-border-width: 2 0 0 0;" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <children>
+
+                <Label layoutX="15.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="DETALLE DE LA INCIDENCIA SELECCIONADA" />
+                <Line endX="885.0" endY="0.0" layoutX="15.0" layoutY="26.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                <!-- Descripción del defecto — descripcion de tbl.Incidencias_Servicio -->
+                <Label layoutX="15.0" layoutY="34.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="DESCRIPCIÓN" />
+                <TextField fx:id="txtDescripcionDetalle" disable="true" layoutX="105.0" layoutY="30.0" prefHeight="26.0" prefWidth="790.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 11px;" />
+
+                <!-- Descripcion del trabajo del servicio -->
+                <Label layoutX="15.0" layoutY="68.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #555555;" text="TRABAJO" />
+                <TextField fx:id="txtTrabajoDetalle" disable="true" layoutX="105.0" layoutY="64.0" prefHeight="26.0" prefWidth="790.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent #c5ced6 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 10px;" />
+
+                <Line endX="885.0" endY="0.0" layoutX="15.0" layoutY="100.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
+                <!-- ACCIONES -->
+                <HBox layoutX="15.0" layoutY="108.0" prefHeight="40.0" spacing="12.0">
+                    <children>
+                        <!-- Abre pantalla 7 — Resolver Incidencia -->
+                        <Button fx:id="btnResolver" onAction="#fnAbrirResolverIncidencia" prefHeight="32.0" prefWidth="180.0" style="-fx-background-color: #CC6600; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;" text="RESOLVER INCIDENCIA">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+                        <!-- Abre pantalla 4 — Detalle del Servicio asociado -->
+                        <Button fx:id="btnVerServicio" onAction="#fnAbrirDetalleServicio" prefHeight="32.0" prefWidth="180.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-background-radius: 2;" text="VER SERVICIO">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </Button>
+
+                        <!-- Contador de incidencias abiertas -->
+                        <Pane prefHeight="32.0" prefWidth="240.0" style="-fx-background-color: #FFF0ED; -fx-border-color: #FF6B6B; -fx-border-width: 1; -fx-border-radius: 2; -fx-background-radius: 2;">
+                            <children>
+                                <Label layoutX="12.0" layoutY="4.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: #CC3300; -fx-font-weight: bold;" text="TOTAL INCIDENCIAS ABIERTAS:" />
+                                <Label fx:id="lblContadorIncidencias" layoutX="196.0" layoutY="4.0" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-text-fill: #CC3300; -fx-font-weight: bold;" text="0" />
+                            </children>
+                        </Pane>
+                    </children>
+                </HBox>
+
+            </children>
+        </Pane>
+
+        <!-- BOTTOM STRIP -->
+        <Pane prefHeight="6.0" prefWidth="920.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+
+    </children>
+</AnchorPane>
