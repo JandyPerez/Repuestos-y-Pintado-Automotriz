@@ -43,7 +43,7 @@
                 </AnchorPane>
 
                 <!-- RIGHT — FORM -->
-                <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #F8FCFF;">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="508.0" prefWidth="508.0" style="-fx-background-color: #F8FCFF;">
                     <children>
 
                         <!-- ID -->
