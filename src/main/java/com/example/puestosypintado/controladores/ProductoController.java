@@ -66,8 +66,10 @@ public class ProductoController {
     public void initialize() {
 
         // Categorías desde BD
-        cmbCategoria.setItems(fillComboBoxCategoria());
-        cmbCategoria.setValue(null);
+        cmbCategoria.setItems(FXCollections.observableArrayList(
+                "Accesorios", "No me acuerdo los otros", "algo mas pa decorar"
+        ));
+        //cmbCategoria.setValue(null);
 
         // Estado de la pieza
         cmbEstadoPieza.setItems(FXCollections.observableArrayList(
@@ -112,25 +114,25 @@ public class ProductoController {
     }
 
     // ─── CARGAR CATEGORÍAS ────────────────────────────────────────
-    private ObservableList<String> fillComboBoxCategoria() {
-
-        ObservableList<String> lista = FXCollections.observableArrayList();
-
-        String sql = "SELECT nombre FROM Categoria ORDER BY nombre";
-
-        try (Connection conn = conexion.estabecerConexion();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) lista.add(rs.getString("nombre"));
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "Error cargando categorias: " + e.getMessage());
-        }
-
-        return lista;
-    }
+//    private ObservableList<String> fillComboBoxCategoria() {
+//
+//        ObservableList<String> lista = FXCollections.observableArrayList();
+//
+//        String sql = "SELECT nombre_empresa FROM [tbl.Proveedor] ORDER BY nombre";
+//
+//        try (Connection conn = conexion.estabecerConexion();
+//             PreparedStatement ps = conn.prepareStatement(sql);
+//             ResultSet rs = ps.executeQuery()) {
+//
+//            while (rs.next()) lista.add(rs.getString("nombre"));
+//
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(null,
+//                    "Error cargando categorias: " + e.getMessage());
+//        }
+//
+//        return lista;
+//    }
 
     // Obtiene el id de una categoría por nombre
     private int obtenerIdCategoria(String nombre) {

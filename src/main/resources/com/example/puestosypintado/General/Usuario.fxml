@@ -31,8 +31,8 @@
                         <Label layoutX="10.0" layoutY="10.0" style="-fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="LISTADO" />
                         <TableView fx:id="tvUsuario" layoutY="32.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-selection-bar: #0066CC; -fx-selection-bar-non-focused: #66B2FF; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
                             <columns>
-                                <TableColumn fx:id="colUsernameUsr" prefWidth="130.0" text="USERNAME" />
-                                <TableColumn fx:id="colRolUsr" prefWidth="100.0" text="ROL" />
+                                <TableColumn fx:id="colUsuario" prefWidth="130.0" text="USERNAME" />
+                                <TableColumn fx:id="colRol" prefWidth="100.0" text="ROL" />
                                 <TableColumn fx:id="colEstadoUsr" prefWidth="80.0" text="ESTADO" />
                             </columns>
                             <columnResizePolicy>
@@ -48,7 +48,7 @@
 
                         <!-- ID -->
                         <Label layoutX="23.0" layoutY="18.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="ID USUARIO" />
-                        <TextField fx:id="txtIdUsr" layoutX="115.0" layoutY="12.0" prefHeight="28.0" prefWidth="80.0" style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+                        <TextField fx:id="txtIdUsuario" layoutX="115.0" layoutY="12.0" prefHeight="28.0" prefWidth="80.0" style="-fx-background-color: #F0F5FB; -fx-border-color: transparent transparent #0066CC transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px;" />
                         <Button layoutX="203.0" layoutY="12.0" onAction="#fnBuscarUsuario" prefHeight="28.0" prefWidth="34.0" style="-fx-background-color: #0066CC; -fx-text-fill: #FFFFFF; -fx-font-size: 13px; -fx-background-radius: 2;" text="🔍">
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                         </Button>
@@ -57,19 +57,19 @@
 
                         <!-- EMPLEADO VINCULADO -->
                         <Label layoutX="20.0" layoutY="63.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="EMPLEADO *" />
-                        <ComboBox fx:id="cmbNombre" layoutX="115.0" layoutY="59.0" prefHeight="28.0" prefWidth="310.0" promptText="Seleccione empleado..." style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
+                        <ComboBox onAction="#seleccionarEmpleado" fx:id="cmbNombre" layoutX="115.0" layoutY="59.0" prefHeight="28.0" prefWidth="310.0" promptText="Seleccione empleado..." style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1;" />
 
                         <!-- USERNAME -->
                         <Label layoutX="20.0" layoutY="101.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="USERNAME *" />
-                        <TextField fx:id="txtUsernameUsr" layoutX="115.0" layoutY="97.0" prefHeight="28.0" prefWidth="310.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+                        <TextField fx:id="txtUsuario" layoutX="115.0" layoutY="97.0" prefHeight="28.0" prefWidth="310.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
 
                         <!-- PASSWORD -->
                         <Label layoutX="20.0" layoutY="139.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="CONTRASEÑA *" />
-                        <PasswordField fx:id="txtPasswordUsr" layoutX="115.0" layoutY="135.0" prefHeight="28.0" prefWidth="310.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
+                        <PasswordField fx:id="txtContrasena" layoutX="115.0" layoutY="135.0" prefHeight="28.0" prefWidth="310.0" style="-fx-background-color: #FFFFFF; -fx-border-color: transparent transparent #D9E8F5 transparent; -fx-border-width: 0 0 2 0; -fx-text-fill: #1A1A1A; -fx-font-family: Courier New; -fx-font-size: 12px;" />
 
                         <!-- ROL -->
                         <Label layoutX="20.0" layoutY="177.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="ROL *" />
-                        <ComboBox fx:id="cmbRolUsr" layoutX="115.0" layoutY="173.0" prefHeight="28.0" prefWidth="310.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #0066CC; -fx-border-width: 1;" />
+                        <ComboBox fx:id="cmbRol" layoutX="115.0" layoutY="173.0" prefHeight="28.0" prefWidth="310.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #0066CC; -fx-border-width: 1;" />
 
                         <!-- ESTADO -->
                         <Label layoutX="20.0" layoutY="215.0" style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #000000;" text="ESTADO" />

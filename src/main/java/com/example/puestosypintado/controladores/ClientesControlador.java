@@ -82,6 +82,13 @@ public class ClientesControlador {
         colnombre.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
 
         tvclientes.setItems(observableCliente());
+
+        tvclientes.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldVal, newVal) -> {
+                    if (newVal != null) {
+                        buscarPorCedula(newVal.getCedula());
+                    }
+                });
     }
 
     @FXML
@@ -270,7 +277,7 @@ public class ClientesControlador {
         Optional<ButtonType> resultado = alerta.showAndWait();
 
         if (resultado.isPresent() && resultado.get() == ButtonType.YES) {
-            String sql = "DELETE FROM [tbl.Cliente] WHERE id_cliente='" + id + "'";
+            String sql = "Update [tbl.Cliente] set estado ='Inactivo' where id_cliente='" + id + "'"; //"DELETE FROM [tbl.Cliente] WHERE id_cliente='" + id + "'";
             ejecutarSQL(sql);
         }
     }
@@ -316,6 +323,21 @@ public class ClientesControlador {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error:" + e.toString());
         }
+    }
+
+    private void llenarFormulario(ResultSet rs) throws SQLException {
+        txtid_Cliente.setText(rs.getString("id_cliente"));
+        txtnombre.setText    (rs.getString("nombre"));
+        txtcedula.setText    (rs.getString("cedula"));
+        txttelefono.setText  (rs.getString("telefono"));
+        txtemail.setText     (rs.getString("email"));
+        txtdireccion.setText (rs.getString("direccion"));
+        String provincia = rs.getString("provincia");
+        cmbProvincia.getSelectionModel().select(provincia.trim());
+        String sector = rs.getString("sector");
+        cmbSector.getSelectionModel().select(sector.trim());
+        String estado = rs.getString("estado");
+        cmbestado.getSelectionModel().select(estado.trim());
     }
 
     public void ejecutarSQL(String sql) {
@@ -366,16 +388,19 @@ public class ClientesControlador {
         return false;
     }
 
-    @FXML
-    public void irHome(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(
-                    "/com/example/puestosypintado/General/Home.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+    private void buscarPorCedula(String cedula){
+        String sql = "Select * from [tbl.Cliente] where cedula = ?;";
+
+        try (Connection conn = conexion.estabecerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, cedula);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) llenarFormulario(rs);
+
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Error al buscar: " + e.getMessage());
         }
     }
 
@@ -390,5 +415,17 @@ public class ClientesControlador {
         cmbSector.setValue(null);
         cmbProvincia.setValue(null);
         cmbestado.setValue(null);
+    }
+
+    @FXML
+    public void irHome(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/puestosypintado/General/Home.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

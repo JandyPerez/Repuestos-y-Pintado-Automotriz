@@ -26,7 +26,7 @@ public class UsuarioController {
 
     // --- TABLA ---
     @FXML private TableView<Usuario> tvUsuario;
-    @FXML private TableColumn<Usuario, String> colIdUsuario;
+    //@FXML private TableColumn<Usuario, String> colIdUsuario;
     @FXML private TableColumn<Usuario, String> colUsuario;
     @FXML private TableColumn<Usuario, String> colRol;
     @FXML private TableColumn<Usuario, String> colEstadoUsr;
@@ -60,6 +60,13 @@ public class UsuarioController {
         cmbEstado.setValue(null);
 
         actualizarLista();
+
+        tvUsuario.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldVal, newVal) -> {
+                    if (newVal != null) {
+                        buscarPorUsername(newVal.getNombre_usuario());
+                    }
+                });
     }
 
     private void sincronizarEmpleado() {
@@ -108,9 +115,7 @@ public class UsuarioController {
         String nombre = cmbNombre.getValue().toString();  // 👈 importante
 
         if (nombre != null && !nombre.isEmpty()) {
-
             int id = obtenerIdEmpleado(nombre);
-
             if (id > 0) {
                 txtIdEmpleado.setText(String.valueOf(id));
             }
@@ -189,7 +194,7 @@ public class UsuarioController {
     }
 
     public void actualizarLista() {
-        colIdUsuario.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+        //colIdUsuario.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         colUsuario.setCellValueFactory(cellData -> cellData.getValue().usuarioProperty());
         colRol.setCellValueFactory(cellData -> cellData.getValue().rolProperty());
         colEstadoUsr.setCellValueFactory(cellData -> cellData.getValue().estadoProperty());
@@ -206,7 +211,7 @@ public class UsuarioController {
 
         int idEmpleado = obtenerIdEmpleado(cmbNombre.getValue().toString().trim());
 
-        String sql = "INSERT INTO [tbl.Usuario] (id_empleado, username, password_hash, rol, estado) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO [tbl.Usuario] (fk_empleado, username, password_hash, rol, estado) VALUES (?,?,?,?,?)";
 
         try (Connection connection = conexion.estabecerConexion();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -253,9 +258,9 @@ public class UsuarioController {
 
             if (rs.next()) {
                 txtIdUsuario.setText(rs.getString("id_usuario"));
-                txtIdEmpleado.setText(rs.getString("id_empleado"));
+                txtIdEmpleado.setText(rs.getString("fk_empleado"));
                 cmbNombre.setValue(
-                        obtenerNombreEmpleado(rs.getInt("id_empleado"))
+                        obtenerNombreEmpleado(rs.getInt("fk_empleado"))
                 );
                 txtUsuario.setText(rs.getString("username"));
                 txtContrasena.setText(rs.getString("password_hash"));
@@ -283,7 +288,7 @@ public class UsuarioController {
         int id = parseInt(txtIdUsuario.getText().trim());
 
         String sql = "UPDATE [tbl.Usuario] SET " +
-                "id_empleado=" + obtenerIdEmpleado(cmbNombre.getValue().toString().trim()) + ", " +
+                "fk_empleado=" + obtenerIdEmpleado(cmbNombre.getValue().toString().trim()) + ", " +
                 "username='" + txtUsuario.getText().trim() + "', " +
                 "password_hash='" + txtContrasena.getText().trim() + "', " +
                 "rol='" + cmbRol.getValue() + "', " +
@@ -343,7 +348,7 @@ public class UsuarioController {
     @FXML
     public void irHome(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("src/main/resources/com/example/puestosypintado/General/Home.fxml")));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/puestosypintado/General/Home.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -368,5 +373,34 @@ public class UsuarioController {
         cmbRol.setValue(null);
         cmbEstado.setValue(null);
         cmbNombre.setValue(null);
+    }
+
+    public void buscarPorUsername(String username){
+        String sql = "Select * from [tbl.Usuario] where username = ?;";
+
+        try (Connection conn = conexion.estabecerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) llenarFormulario(rs);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error al buscar: " + e.getMessage());
+        }
+    }
+
+    private void llenarFormulario(ResultSet rs) throws SQLException{
+        txtIdUsuario.setText(rs.getString("id_usuario"));
+        txtIdEmpleado.setText(rs.getString("fk_empleado"));
+        cmbNombre.setValue(
+                obtenerNombreEmpleado(rs.getInt("fk_empleado"))
+        );
+        txtUsuario.setText(rs.getString("username"));
+        txtContrasena.setText(rs.getString("password_hash"));
+
+        cmbRol.getSelectionModel().select(rs.getString("rol"));
+        cmbEstado.getSelectionModel().select(rs.getString("estado"));
     }
 }
