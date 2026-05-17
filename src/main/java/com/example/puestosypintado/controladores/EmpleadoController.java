@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 import javafx.fxml.FXMLLoader;
@@ -31,7 +32,7 @@ public class EmpleadoController {
     @FXML private TableColumn<Empleado, String> colNombreEmp, colPuestoEmp, colTelEmp;
     @FXML private TextField txtIdEmp, txtNombreEmp, txtCedulaEmp, txtDireccionEmp, txtTelEmp, txtEmailEmp, txtSalarioEmp;
     @FXML private ComboBox<String> cmbPuestoEmp, cmbEstadoEmp, cmbCiudad, cmbSector;
-    @FXML private DatePicker dpFechaContratEmp;
+    @FXML private DatePicker dpFechaContrato;
 
     @FXML
     protected ObservableList<Empleado> listaEmpleados(){
@@ -57,9 +58,9 @@ public class EmpleadoController {
 
     @FXML
     public void initialize() {
-        dpFechaContratEmp.setValue(null);
+        dpFechaContrato.setValue(null);
 
-        cmbPuestoEmp.setItems(FXCollections.observableArrayList("Mecánico General", "Pintor Automotriz", "Chapista", "Detallista", "Recepcionista", "Gerente"));
+        cmbPuestoEmp.setItems(FXCollections.observableArrayList("Administrador","Mecánico General", "Pintor Automotriz", "Chapista", "Detallista", "Recepcionista", "Gerente"));
         cmbEstadoEmp.setItems(FXCollections.observableArrayList("Activo", "Inactivo"));
         cmbEstadoEmp.setValue(null);
 
@@ -103,6 +104,7 @@ public class EmpleadoController {
                             "Villa Verde", "Caleta", "Savica", "Quisqueya", "Villa Hermosa"
                     ));
                     break;
+
             }});
 
         colNombreEmp.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
@@ -110,6 +112,13 @@ public class EmpleadoController {
         colTelEmp.setCellValueFactory(cellData -> cellData.getValue().telefonoProperty());
 
         tvEmpleados.setItems(listaEmpleados());
+
+        tvEmpleados.getSelectionModel().selectedItemProperty()
+                .addListener((obs, oldVal, newVal) -> {
+                    if (newVal != null) {
+                        buscarPorNombre(newVal.getNombre());
+                    }
+                });
     }
 
     @FXML
@@ -120,14 +129,12 @@ public class EmpleadoController {
         String telefono = txtTelEmp.getText().trim();
         String email = txtEmailEmp.getText().trim();
         String direccion = txtDireccionEmp.getText().trim();
-        String salario = txtSalarioEmp.getText().trim();
-
-        String puesto = cmbPuestoEmp.getValue();
-        String estado = cmbEstadoEmp.getValue();
         String ciudad = cmbCiudad.getValue();
         String sector = cmbSector.getValue();
-
-        java.time.LocalDate fecha = dpFechaContratEmp.getValue();
+        String puesto = cmbPuestoEmp.getValue();
+        String salario = txtSalarioEmp.getText().trim();
+        LocalDate fecha = dpFechaContrato.getValue();
+        String estado = cmbEstadoEmp.getValue();
 
         if (nombre.isEmpty() || cedula.isEmpty() || telefono.isEmpty() || puesto == null) {
             JOptionPane.showMessageDialog(null, "Nombre, Cédula, Teléfono y Puesto son obligatorios.");
@@ -136,8 +143,8 @@ public class EmpleadoController {
             JOptionPane.showMessageDialog(null, "LA CÉDULA YA ESTA GUARDADA EN LA BD!!");
         }
 
-        String sql = "INSERT INTO Empleado " +
-                "(nombre_completo, cedula_rnc, telefono, email, direccion, salario, puesto, estado, ciudad, sector, fecha_contratacion) " +
+        String sql = "INSERT INTO [tbl.Empleado] " +
+                "(nombre_completo, cedula_rnc, telefono, email, direccion, ciudad, sector, puesto, salario, fecha_contratacion, estado) " +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
 
@@ -149,20 +156,21 @@ public class EmpleadoController {
             pstmt.setString(3, telefono);
             pstmt.setString(4, email);
             pstmt.setString(5, direccion);
-            pstmt.setString(6, salario);
-            pstmt.setString(7, puesto);
-            pstmt.setString(8, estado);
-            pstmt.setString(9, ciudad);
-            pstmt.setString(10, sector);
+            pstmt.setString(6, ciudad);
+            pstmt.setString(7, sector);
+            pstmt.setString(8, puesto);
+            pstmt.setString(9, salario);
 
             LocalDate hoy = LocalDate.now();
             if (fecha.isAfter(hoy)) {
                 JOptionPane.showMessageDialog(null,"No se pueden ingresar fechas mayores que hoy");
             } else if (fecha != null) {
-                pstmt.setDate(11, java.sql.Date.valueOf(fecha));
+                pstmt.setDate(10, java.sql.Date.valueOf(fecha));
             } else {
-                pstmt.setDate(11, null);
+                pstmt.setDate(10, null);
             }
+
+            pstmt.setString(11, estado);
 
             if (pstmt.executeUpdate() == 1) {
                 JOptionPane.showMessageDialog(null, "Empleado guardado correctamente");
@@ -185,10 +193,10 @@ public class EmpleadoController {
 
         int id = Integer.parseInt(txtIdEmp.getText().trim());
 
-        String sql = "UPDATE Empleado SET " +
-                "nombre_completo=?, cedula_rnc=?, telefono=?, email=?, direccion=?, salario=?, " +
-                "puesto=?, estado=?, ciudad=?, sector=?, fecha_contratacion=? " +
-                "WHERE id_empleado=?";
+        String sql = "UPDATE [tbl.Empleado] SET " +
+                "nombre_completo=?, cedula_rnc=?, telefono=?, email=?, direccion=?, ciudad=?, sector=?," +
+                "puesto=?, salario=?, fecha_contratacion=?, estado=? " +
+                "WHERE id_empleado=?;";
 
         try (Connection connection = conexion.estabecerConexion();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -198,20 +206,21 @@ public class EmpleadoController {
             pstmt.setString(3, txtTelEmp.getText().trim());
             pstmt.setString(4, txtEmailEmp.getText().trim());
             pstmt.setString(5, txtDireccionEmp.getText().trim());
-            pstmt.setString(6, txtSalarioEmp.getText().trim());
-            pstmt.setString(7, cmbPuestoEmp.getValue());
-            pstmt.setString(8, cmbEstadoEmp.getValue());
-            pstmt.setString(9, cmbCiudad.getValue());
-            pstmt.setString(10, cmbSector.getValue());
+            pstmt.setString(6, cmbCiudad.getValue());
+            pstmt.setString(7, cmbSector.getValue());
+            pstmt.setString(8, cmbPuestoEmp.getValue());
+            pstmt.setString(9, txtSalarioEmp.getText().trim());
 
             LocalDate hoy = LocalDate.now();
-            if (dpFechaContratEmp.getValue().isAfter(hoy)) {
+            if (dpFechaContrato.getValue().isAfter(hoy)) {
                 JOptionPane.showMessageDialog(null,"No se pueden ingresar fechas mayores que hoy");
-            } else if (dpFechaContratEmp.getValue() != null) {
-                pstmt.setDate(11, java.sql.Date.valueOf(dpFechaContratEmp.getValue()));
+            } else if (dpFechaContrato.getValue() != null) {
+                pstmt.setDate(10, java.sql.Date.valueOf(dpFechaContrato.getValue()));
             } else {
-                pstmt.setDate(11, null);
+                pstmt.setDate(10, null);
             }
+
+            pstmt.setString(11, cmbEstadoEmp.getValue());
 
             pstmt.setInt(12, id);
 
@@ -296,16 +305,15 @@ public class EmpleadoController {
                 txtTelEmp.setText(resultSet.getString("telefono"));
                 txtEmailEmp.setText(resultSet.getString("email"));
                 txtDireccionEmp.setText(resultSet.getString("direccion"));
-                txtSalarioEmp.setText(resultSet.getString("salario"));
-
-                cmbPuestoEmp.setValue(resultSet.getString("puesto").trim());
-                cmbEstadoEmp.setValue(resultSet.getString("estado").trim());
                 cmbCiudad.setValue(resultSet.getString("ciudad").trim());
                 cmbSector.setValue(resultSet.getString("sector").trim());
-
-                dpFechaContratEmp.setValue(
+                cmbPuestoEmp.setValue(resultSet.getString("puesto").trim());
+                txtSalarioEmp.setText(resultSet.getString("salario"));
+                dpFechaContrato.setValue(
                         resultSet.getDate("fecha_contratacion").toLocalDate()
                 );
+                cmbEstadoEmp.setValue(resultSet.getString("estado").trim());
+
             }
 
         } catch (Exception e) {
@@ -317,7 +325,7 @@ public class EmpleadoController {
     public void fnLimpiarEmp(ActionEvent event) {
         txtIdEmp.clear(); txtNombreEmp.clear(); txtCedulaEmp.clear(); txtDireccionEmp.clear();
         txtTelEmp.clear(); txtEmailEmp.clear(); txtSalarioEmp.clear();
-        cmbPuestoEmp.setValue(null); dpFechaContratEmp.setValue(null);
+        cmbPuestoEmp.setValue(null); dpFechaContrato.setValue(null);
         cmbEstadoEmp.setValue(null);
         cmbCiudad.setValue(null); cmbSector.setValue(null);
     }
@@ -368,5 +376,39 @@ public class EmpleadoController {
         colTelEmp.setCellValueFactory(cellData -> cellData.getValue().telefonoProperty());
 
         tvEmpleados.setItems(listaEmpleados());
+    }
+
+    public void buscarPorNombre(String nombre){
+        String sql = "Select * from [tbl.Empleado] where nombre_completo = ?;";
+
+        try (Connection conn = conexion.estabecerConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) llenarFormulario(rs);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error al buscar: " + e.getMessage());
+        }
+    }
+
+    private void llenarFormulario(ResultSet resultSet) throws SQLException{
+        txtIdEmp.setText(resultSet.getString("id_empleado"));
+        txtNombreEmp.setText(resultSet.getString("nombre_completo"));
+        txtCedulaEmp.setText(resultSet.getString("cedula_rnc"));
+        txtTelEmp.setText(resultSet.getString("telefono"));
+        txtEmailEmp.setText(resultSet.getString("email"));
+        txtDireccionEmp.setText(resultSet.getString("direccion"));
+        cmbCiudad.setValue(resultSet.getString("ciudad").trim());
+        cmbSector.setValue(resultSet.getString("sector").trim());
+        cmbPuestoEmp.setValue(resultSet.getString("puesto").trim());
+        txtSalarioEmp.setText(resultSet.getString("salario"));
+        dpFechaContrato.setValue(
+                resultSet.getDate("fecha_contratacion").toLocalDate()
+        );
+        cmbEstadoEmp.setValue(resultSet.getString("estado").trim());
+
     }
 }
