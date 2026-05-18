@@ -12,17 +12,9 @@
         <Pane prefHeight="80.0" prefWidth="440.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <!-- Nombre sistema -->
-                <Label layoutX="0.0" layoutY="10.0" prefWidth="440.0" style="-fx-font-family: Impact; -fx-font-size: 27px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-alignment: CENTER;" text="REPUESTOS Y PINTADO" />
+                <Label layoutY="20.0" prefWidth="440.0" style="-fx-font-family: Impact; -fx-font-size: 27px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-alignment: CENTER;" text="REPUESTOS Y PINTADO" />
                 <!-- Subtítulo -->
-                <Label layoutY="42.0" prefWidth="440.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.80); -fx-alignment: CENTER; -fx-letter-spacing: 1;" text="Sistema de Gestion de Taller  —  Acceso Autorizado" />
-            </children>
-        </Pane>
-
-        <!-- BADGE RP — sobresale del header hacia la tarjeta -->
-        <Pane layoutX="175.0" layoutY="58.0" prefHeight="52.0" prefWidth="90.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6;">
-            <children>
-                <Label layoutX="0.0" layoutY="4.0" prefWidth="90.0" style="-fx-font-family: Impact; -fx-font-size: 22px; -fx-text-fill: #0066CC; -fx-alignment: CENTER; -fx-font-weight: bold;" text="R&amp;P" />
-                <Label layoutX="0.0" layoutY="30.0" prefWidth="90.0" style="-fx-font-family: Courier New; -fx-font-size: 8px; -fx-text-fill: #00AA99; -fx-alignment: CENTER; -fx-font-weight: bold;" text="TALLER" />
+                <Label layoutY="52.0" prefWidth="440.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-text-fill: rgba(255,255,255,0.80); -fx-alignment: CENTER; -fx-letter-spacing: 1;" text="Sistema de Gestion de Taller  —  Acceso Autorizado" />
             </children>
         </Pane>
 
