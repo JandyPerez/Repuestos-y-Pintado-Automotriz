@@ -93,8 +93,8 @@ public class LoginController {
         // ── Login exitoso: guardar sesión y abrir Home ────────────
         SesionUsuario.instancia().iniciar(
                 datos.nombreCompleto,
-                datos.rol,
-                usuario              // username también en sesión
+                datos.rol//,
+                //usuario              // username también en sesión
         );
 
         intentosFallidos = 0;        // resetear contador al entrar
