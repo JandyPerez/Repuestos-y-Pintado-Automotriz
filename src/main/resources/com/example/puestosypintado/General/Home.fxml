@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #F0F5FB;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.puestosypintado.controladores.HomeController">
+<BorderPane prefHeight="800.0" prefWidth="900.0" style="-fx-background-color: #F0F5FB;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.puestosypintado.controladores.HomeController">
 
     <top>
         <Pane prefHeight="54.0" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #0066CC, #00AA99);" BorderPane.alignment="CENTER">
@@ -28,97 +28,91 @@
     </top>
 
     <left>
-        <AnchorPane prefWidth="220.0" style="-fx-background-color: #E8F1F8; -fx-border-color: #B3D9FF; -fx-border-width: 0 2 0 0;" BorderPane.alignment="CENTER">
+        <AnchorPane prefWidth="280.0" style="-fx-background-color: #E8F1F8; -fx-border-color: #B3D9FF; -fx-border-width: 0 2 0 0;" BorderPane.alignment="CENTER">
             <children>
 
                 <Label layoutX="10.0" layoutY="14.0" style="-fx-font-family: Courier New; -fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="MODULOS" />
 
-                <Line endX="195.0" endY="0.0" layoutX="10.0" layoutY="34.0" startX="0.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+                <Line endX="255.0" endY="0.0" layoutX="10.0" layoutY="34.0" startX="0.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
 
-                <Line endX="195.0" endY="0.0" layoutX="10.0" layoutY="518.0" startX="0.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
-
-                <!-- Botón VOLVER AL LOGIN — subido unos píxeles -->
-                <Button layoutX="10.0" layoutY="525.0" onAction="#irLogin" prefHeight="34.0" prefWidth="200.0" style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #E63939; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="VOLVER AL LOGIN">
-                    <cursor><Cursor fx:constant="HAND" /></cursor>
-                </Button>
-
-                <ScrollPane layoutX="8.0" layoutY="39.0" prefHeight="472.0" prefWidth="204.0" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <ScrollPane layoutX="8.0" layoutY="39.0" prefHeight="629.0" prefWidth="268.0" style="-fx-background-color: transparent; -fx-background: transparent;">
                     <content>
-                        <VBox fx:id="vboxMenu" prefHeight="502.0" prefWidth="210.0" spacing="6.0">
+                        <VBox fx:id="vboxMenu" spacing="8.0">
                             <children>
+                                <Label fx:id="lblSecGeneral" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #6699CC; -fx-padding: 10 0 2 0;" text="GENERAL" />
 
-                                <Button fx:id="btnClientes" maxWidth="Infinity" onAction="#irCliente" prefHeight="36.0" prefWidth="190.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Clientes">
+                                <Button fx:id="btnClientes" maxWidth="Infinity" onAction="#irCliente" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Clientes">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnEmpleados" maxWidth="Infinity" onAction="#irEmpleado" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Empleados">
+                                <Button fx:id="btnEmpleados" maxWidth="Infinity" onAction="#irEmpleado" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Empleados">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnProductos" maxWidth="Infinity" onAction="#irProducto" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Inventario">
+                                <Button fx:id="btnUsuarios" maxWidth="Infinity" onAction="#irUsuario" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Usuarios">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnProveedores" maxWidth="Infinity" onAction="#irProveedor" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Proveedores">
+                                <Label fx:id="lblSecVentas" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #6699CC; -fx-padding: 10 0 2 0;" text="VENTAS E INVENTARIO" />
+
+                                <Button fx:id="btnProductos" maxWidth="Infinity" onAction="#irProducto" prefHeight="45.0" prefWidth="226.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Inventario">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnUsuarios" maxWidth="Infinity" onAction="#irUsuario" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Usuarios">
+                                <Button fx:id="btnProveedores" maxWidth="Infinity" onAction="#irProveedor" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Proveedores">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnVehiculos" maxWidth="Infinity" onAction="#irVehiculo" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Vehiculos">
+                                <Button fx:id="btnVehiculos" maxWidth="Infinity" onAction="#irVehiculo" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Vehiculos">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnVentas" maxWidth="Infinity" onAction="#irVenta" prefHeight="36.0" prefWidth="214.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Ventas">
+                                <Button fx:id="btnVentas" maxWidth="Infinity" onAction="#irVenta" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Ventas">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnPagos" maxWidth="Infinity" onAction="#irPago" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Pagos">
+                                <Button fx:id="btnPagos" maxWidth="Infinity" onAction="#irPago" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Pagos">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
 
-                                <Button fx:id="btnPintura" maxWidth="Infinity" onAction="#irPintura" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Agregar Subservicio">
+                                <Label fx:id="lblSecTaller" style="-fx-font-family: Courier New; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #6699CC; -fx-padding: 10 0 2 0;" text="TALLER Y PINTURA" />
+
+                                <Button fx:id="btnAgregarSubservicio" maxWidth="Infinity" onAction="#irAgregarSubservicio" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Agregar Subservicio">
                                     <cursor><Cursor fx:constant="HAND" /></cursor>
                                 </Button>
-                        <Button layoutX="10.0" layoutY="349.0" maxWidth="Infinity" onAction="#irPintura" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Detalle Servicio">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button layoutX="10.0" layoutY="392.0" maxWidth="Infinity" onAction="#irPintura" prefHeight="36.0" prefWidth="176.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Entrega Vehiculo">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button layoutX="10.0" layoutY="434.0" maxWidth="Infinity" onAction="#irPintura" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Incidencias Abiertas">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button layoutX="10.0" layoutY="476.0" maxWidth="Infinity" onAction="#irPintura" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Nueva Orden">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Button layoutX="10.0" layoutY="480.0" maxWidth="Infinity" onAction="#irPintura" prefHeight="36.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 12;" text="Registrar Incidencia">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
+                                <Button fx:id="btnDetalleServicio" maxWidth="Infinity" onAction="#irDetalleServicio" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Detalle Servicio">
+                                   <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button fx:id="btnEntregaVehiculo" maxWidth="Infinity" onAction="#irEntregaVehiculo" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Entrega Vehiculo">
+                                   <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button fx:id="btnIncidenciasAbiertas" maxWidth="Infinity" onAction="#irIncidenciasAbiertas" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Incidencias Abiertas">
+                                   <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button fx:id="btnNuevaOrden" maxWidth="Infinity" onAction="#irNuevaOrden" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Nueva Orden">
+                                   <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
+                                <Button fx:id="btnRegistrarIncidencia" maxWidth="Infinity" onAction="#irRegistrarIncidencia" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #003D99; -fx-font-family: Courier New; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 16;" text="Registrar Incidencia">
+                                   <cursor><Cursor fx:constant="HAND" /></cursor>
+                                </Button>
 
                             </children>
                         </VBox>
                     </content>
                 </ScrollPane>
 
+                <!-- Botón VOLVER AL LOGIN — subido unos píxeles -->
+                <Button layoutX="10.0" layoutY="525.0" onAction="#irLogin" prefHeight="34.0" prefWidth="260.0" style="-fx-background-color: #FF6B6B; -fx-text-fill: #FFFFFF; -fx-font-family: Courier New; -fx-font-size: 11px; -fx-font-weight: bold; -fx-border-color: #E63939; -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="VOLVER AL LOGIN" AnchorPane.bottomAnchor="7.0">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
+            <Line endX="255.0" endY="0.0" layoutX="14.0" layoutY="683.0" startX="0.0" startY="0.0" style="-fx-stroke: #0066CC; -fx-opacity: 0.3;" />
+
             </children>
         </AnchorPane>
     </left>
 
     <center>
-        <VBox alignment="CENTER" spacing="12.0" style="-fx-background-color: #F5F9FF;" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" prefHeight="560.0" prefWidth="579.0" spacing="12.0" style="-fx-background-color: #F5F9FF;" BorderPane.alignment="CENTER">
             <children>
                 <Label style="-fx-font-family: Courier New; -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0066CC;" text="BIENVENIDO AL SISTEMA" />
                 <Label style="-fx-font-family: Courier New; -fx-font-size: 12px; -fx-text-fill: #6699CC;" text="Selecciona un modulo en el menu para comenzar." />

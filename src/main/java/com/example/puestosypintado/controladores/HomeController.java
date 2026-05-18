@@ -19,6 +19,11 @@ public class HomeController {
     @FXML private Label lblNombreUsuario;
     @FXML private Label lblRolUsuario;
 
+    // ── Labels de Secciones ──────────────────────────────────────
+    @FXML private Label lblSecGeneral;
+    @FXML private Label lblSecVentas;
+    @FXML private Label lblSecTaller;
+
     // ── Botones del menú lateral ─────────────────────────────────
     @FXML private Button btnClientes;
     @FXML private Button btnEmpleados;
@@ -28,7 +33,12 @@ public class HomeController {
     @FXML private Button btnVehiculos;
     @FXML private Button btnVentas;
     @FXML private Button btnPagos;
-    @FXML private Button btnPintura;
+    @FXML private Button btnAgregarSubservicio;
+    @FXML private Button btnDetalleServicio;
+    @FXML private Button btnEntregaVehiculo;
+    @FXML private Button btnIncidenciasAbiertas;
+    @FXML private Button btnNuevaOrden;
+    @FXML private Button btnRegistrarIncidencia;
 
     // ─── initialize ──────────────────────────────────────────────
     @FXML
@@ -49,11 +59,11 @@ public class HomeController {
      * Cada rol solo ve los módulos que le corresponden.
      *
      * Administrador  → todo
-     * Recepcionista  → Clientes, Vehículos, Servicio Pintura
-     * Mecánico       → Vehículos, Servicio Pintura
-     * Cajero         → Ventas, Pagos
-     * Vendedor       → Ventas, Productos
-     * Técnico        → Vehículos, Servicio Pintura, Productos
+     * Recepcionista  → Clientes, Vehículos, Nueva Orden, Entrega, Detalle Servicio
+     * Mecánico       → Vehículos, Detalle Servicio, Agregar Subservicio, Incidencias
+     * Cajero         → Clientes, Ventas, Pagos
+     * Vendedor       → Clientes, Productos, Proveedores, Ventas
+     * Técnico pintura→ Vehículos, Productos, Detalle Servicio, Agregar Subservicio, Incidencias
      */
     private void configurarMenuPorRol(String rol) {
 
@@ -64,26 +74,29 @@ public class HomeController {
 
             case "Admin":
                 mostrarTodos();
+                if (lblSecGeneral != null) { lblSecGeneral.setVisible(true); lblSecGeneral.setManaged(true); }
+                if (lblSecVentas != null) { lblSecVentas.setVisible(true); lblSecVentas.setManaged(true); }
+                if (lblSecTaller != null) { lblSecTaller.setVisible(true); lblSecTaller.setManaged(true); }
                 break;
 
             case "Recepcionista":
-                mostrar(btnClientes, btnVehiculos, btnPintura);
+                mostrar(btnClientes, btnVehiculos, btnNuevaOrden, btnDetalleServicio, btnEntregaVehiculo);
                 break;
 
             case "Mecánico":
-                mostrar(btnVehiculos, btnPintura);
+                mostrar(btnVehiculos, btnDetalleServicio, btnAgregarSubservicio, btnRegistrarIncidencia, btnIncidenciasAbiertas);
                 break;
 
             case "Cajero":
-                mostrar(btnVentas, btnPagos);
+                mostrar(btnClientes, btnVentas, btnPagos);
                 break;
 
-            case "vendedor":
-                mostrar(btnVentas, btnProductos);
+            case "Vendedor":
+                mostrar(btnClientes, btnProductos, btnProveedores, btnVentas);
                 break;
 
-            case "Técnico":
-                mostrar(btnVehiculos, btnPintura, btnProductos);
+            case "Técnico pintura":
+                mostrar(btnVehiculos, btnProductos, btnDetalleServicio, btnAgregarSubservicio, btnRegistrarIncidencia, btnIncidenciasAbiertas);
                 break;
 
             default:
@@ -96,14 +109,20 @@ public class HomeController {
     private void ocultarTodos() {
         Button[] todos = { btnClientes, btnEmpleados, btnProductos,
                 btnProveedores, btnUsuarios, btnVehiculos,
-                btnVentas, btnPagos, btnPintura };
+                btnVentas, btnPagos, btnAgregarSubservicio, btnDetalleServicio,
+                btnEntregaVehiculo, btnIncidenciasAbiertas, btnNuevaOrden, btnRegistrarIncidencia };
         for (Button b : todos) { b.setVisible(false); b.setManaged(false); }
+
+        if (lblSecGeneral != null) { lblSecGeneral.setVisible(false); lblSecGeneral.setManaged(false); }
+        if (lblSecVentas != null) { lblSecVentas.setVisible(false); lblSecVentas.setManaged(false); }
+        if (lblSecTaller != null) { lblSecTaller.setVisible(false); lblSecTaller.setManaged(false); }
     }
 
     private void mostrarTodos() {
         Button[] todos = { btnClientes, btnEmpleados, btnProductos,
                 btnProveedores, btnUsuarios, btnVehiculos,
-                btnVentas, btnPagos, btnPintura };
+                btnVentas, btnPagos, btnAgregarSubservicio, btnDetalleServicio,
+                btnEntregaVehiculo, btnIncidenciasAbiertas, btnNuevaOrden, btnRegistrarIncidencia };
         for (Button b : todos) { b.setVisible(true); b.setManaged(true); }
     }
 
@@ -142,13 +161,28 @@ public class HomeController {
         cambiarEscena(event, "/com/example/puestosypintado/Venta/Vehiculo.fxml");
     }
     @FXML public void irVenta(ActionEvent event) {
-        cambiarEscena(event, "/com/example/puestosypintado/General/Venta.fxml");
+        cambiarEscena(event, "/com/example/puestosypintado/Venta/Venta.fxml");
     }
     @FXML public void irPago(ActionEvent event) {
-        cambiarEscena(event, "/com/example/puestosypintado/General/Pago.fxml");
+        cambiarEscena(event, "/com/example/puestosypintado/Venta/Pago.fxml");
     }
-    @FXML public void irPintura(ActionEvent event) {
+    @FXML public void irAgregarSubservicio(ActionEvent event) {
+        cambiarEscena(event, "/com/example/puestosypintado/Pintura/AgregarSubservicio.fxml");
+    }
+    @FXML public void irDetalleServicio(ActionEvent event) {
         cambiarEscena(event, "/com/example/puestosypintado/Pintura/DetalleServicio.fxml");
+    }
+    @FXML public void irEntregaVehiculo(ActionEvent event) {
+        cambiarEscena(event, "/com/example/puestosypintado/Pintura/EntregaVehiculo.fxml");
+    }
+    @FXML public void irIncidenciasAbiertas(ActionEvent event) {
+        cambiarEscena(event, "/com/example/puestosypintado/Pintura/IncidenciasAbiertas.fxml");
+    }
+    @FXML public void irNuevaOrden(ActionEvent event) {
+        cambiarEscena(event, "/com/example/puestosypintado/Pintura/NuevaOrden.fxml");
+    }
+    @FXML public void irRegistrarIncidencia(ActionEvent event) {
+        cambiarEscena(event, "/com/example/puestosypintado/Pintura/RegistrarIncidencia.fxml");
     }
 
     // ─── VOLVER AL LOGIN ─────────────────────────────────────────

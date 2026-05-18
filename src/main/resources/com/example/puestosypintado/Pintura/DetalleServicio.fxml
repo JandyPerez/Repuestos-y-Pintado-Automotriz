@@ -124,7 +124,7 @@
                             <columns>
                                 <TableColumn fx:id="colSubNombre" prefWidth="160.0" text="SUBSERVICIO" />
                                 <TableColumn fx:id="colSubEstado" prefWidth="110.0" text="ESTADO" />
-                                <TableColumn fx:id="colSubTecnico" prefWidth="130.0" text="TÉCNICO" />
+                                <TableColumn fx:id="colSubTecnico" prefWidth="130.0" text="TÉCNICO PINTURA" />
                                 <TableColumn fx:id="colSubFecFin" prefWidth="100.0" text="FECHA FIN" />
                             </columns>
                             <columnResizePolicy>

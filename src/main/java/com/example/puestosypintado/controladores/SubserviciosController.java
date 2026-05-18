@@ -39,6 +39,9 @@ public class SubserviciosController {
     @FXML private TableColumn<Subservicio, String>  colCatNombre;
     @FXML private TableColumn<Subservicio, String>  colCatPrecioBase;
     @FXML private TextField                         txtDescSubservicio;
+    @FXML private TextField                         txtPiezas;
+    @FXML private ListView<String>                  lvPiezas;
+
 
     // ─── FXML — Panel derecho (subservicios de la orden) ─────────
     @FXML private TableView<DetalleSubservicio>             tvOrdenSubservicios;
@@ -202,6 +205,21 @@ public class SubserviciosController {
             } else {
                 JOptionPane.showMessageDialog(null, "Error al agregar: " + msg);
             }
+        }
+    }
+
+    // ─── MÉTODOS AÑADIDOS DE LA UI ────────────────────────────────
+    @FXML
+    public void fnSeleccionarTodo(ActionEvent event) {
+        if (tvCatalogo != null) {
+            tvCatalogo.getSelectionModel().selectAll();
+        }
+    }
+
+    @FXML
+    public void fnDeseleccionarTodo(ActionEvent event) {
+        if (tvCatalogo != null) {
+            tvCatalogo.getSelectionModel().clearSelection();
         }
     }
 

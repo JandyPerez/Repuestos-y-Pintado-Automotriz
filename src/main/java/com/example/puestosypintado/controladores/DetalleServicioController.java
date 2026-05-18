@@ -50,7 +50,7 @@ public class DetalleServicioController {
     @FXML private TextField txtAnticipoRequerido;
     @FXML private TextField txtPagado;
     @FXML private TextField txtSaldoPendiente;
-    @FXML private Label     lblAnticipoPagado;
+    @FXML private TextField lblAnticipoPagado;
     @FXML private TextField txtDescripcion;
 
     // ─── FXML — Tabla subservicios ────────────────────────────────

@@ -28,6 +28,11 @@
             </children>
         </Pane>
 
+        <!-- Botón HOME (flotante sobre el header) -->
+        <Button onAction="#irHome" prefHeight="26.0" prefWidth="80.0" style="-fx-background-color: rgba(255,255,255,0.22); -fx-text-fill: #FFFFFF; -fx-font-family: 'Courier New'; -fx-font-size: 10px; -fx-font-weight: bold; -fx-border-color: rgba(255,255,255,0.50); -fx-border-width: 1; -fx-border-radius: 3; -fx-background-radius: 3;" text="HOME" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="11.0">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </Button>
+
         <!-- BANDA DE VERIFICACIÓN — verde si listo, rojo si hay bloqueos -->
         <Pane fx:id="paneVerificacion" layoutY="48.0" prefHeight="36.0" prefWidth="700.0" style="-fx-background-color: #00AA77;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
@@ -68,7 +73,7 @@
                 <TableView fx:id="tvSubserviciosRealizados" layoutY="132.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #B3D9FF; -fx-border-width: 1; -fx-selection-bar: #0066CC; -fx-faint-focus-color: transparent;" AnchorPane.bottomAnchor="218.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="132.0">
                     <columns>
                         <TableColumn fx:id="colSubNombre" prefWidth="220.0" text="SUBSERVICIO" />
-                        <TableColumn fx:id="colSubTecnico" prefWidth="180.0" text="TÉCNICO" />
+                        <TableColumn fx:id="colSubTecnico" prefWidth="180.0" text="TÉCNICO PINTURA" />
                         <TableColumn fx:id="colSubFecFin" prefWidth="140.0" text="COMPLETADO" />
                         <TableColumn fx:id="colSubEstado" prefWidth="100.0" text="ESTADO" />
                     </columns>

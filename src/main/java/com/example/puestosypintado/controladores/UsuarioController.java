@@ -43,7 +43,7 @@ public class UsuarioController {
     public void initialize() {
 
         cmbRol.setItems(FXCollections.observableArrayList(
-                "Admin", "Mecánico", "Recepcionista", "Cajero", "Técnico","Vendedor"
+                "Admin", "Mecánico", "Recepcionista", "Cajero", "Técnico pintura","Vendedor"
         ));
 
         cmbEstado.setItems(FXCollections.observableArrayList(
