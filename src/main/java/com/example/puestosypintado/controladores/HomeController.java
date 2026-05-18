@@ -78,7 +78,7 @@ public class HomeController {
                 mostrar(btnVentas, btnPagos);
                 break;
 
-            case "Vendedor":
+            case "vendedor":
                 mostrar(btnVentas, btnProductos);
                 break;
 

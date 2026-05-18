@@ -25,6 +25,7 @@ public class SesionUsuario {
     // ── Estado ───────────────────────────────────────────────────
     private String nombre = "";
     private String rol    = "";
+    private String username = "";
 
     // ── API pública ──────────────────────────────────────────────
     public void iniciar(String nombre, String rol) {
