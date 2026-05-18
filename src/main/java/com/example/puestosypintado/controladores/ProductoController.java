@@ -182,7 +182,7 @@ public class ProductoController {
 
         ObservableList<Poducto> lista = FXCollections.observableArrayList();
 
-        String sql = "SELECT sku, nombre, stock_actual FROM Producto";
+        String sql = "SELECT sku, nombre, stock_actual FROM [tbl.Producto]";
 
         try (Connection conn = conexion.estabecerConexion();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -441,7 +441,7 @@ public class ProductoController {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.YES) {
 
-            String sql = "DELETE FROM Producto WHERE sku = ?";
+            String sql = "DELETE FROM [tbl.Producto] WHERE sku = ?";
 
             try (Connection conn = conexion.estabecerConexion();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -506,7 +506,7 @@ public class ProductoController {
     // Busca por sku usando PreparedStatement seguro — FIX #2/#3
     private void buscarPorSku(int sku) {
 
-        String sql = "SELECT * FROM Producto WHERE sku = ?";
+        String sql = "SELECT * FROM [tbl.Producto] WHERE sku = ?";
 
         try (Connection conn = conexion.estabecerConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -531,7 +531,7 @@ public class ProductoController {
     // Busca por nombre usando PreparedStatement seguro — FIX #2/#3
     private void buscarPorNombre(String nombre) {
 
-        String sql = "SELECT * FROM Producto WHERE nombre LIKE ?";
+        String sql = "SELECT * FROM [tbl.Producto] WHERE nombre LIKE ?";
 
         try (Connection conn = conexion.estabecerConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
