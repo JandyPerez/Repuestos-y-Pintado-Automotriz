@@ -35,7 +35,7 @@ public class Usuario {
         return estado.get();
     }
 
-    // Constructor solo con los campos que se muestran en la tabla
+    // Constructor soloa con los campos que se muestran en la tabla
     public Usuario(String id, String usuario, String rol, String estado) {
         this.id_usuario.set(Integer.parseInt(id));
         this.nombre_usuario.set(usuario);
